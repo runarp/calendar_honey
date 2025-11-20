@@ -1,0 +1,43 @@
+# Calendar Honey Configuration
+# RAG ingestion framework for calendar_bee data
+
+# Service identification
+instance_id: personal
+channel_type: calendar
+
+# Data storage (Nest directory from calendar_bee)
+data_root: ~/Documents/Nest/Calendar
+
+# Vector store configuration
+vector_store:
+  type: chroma  # chroma | qdrant | pinecone
+  path: ~/Documents/Nest/Calendar/honey/calendar/personal/vector_store
+  collection_name: calendar_events
+
+# Embedding configuration
+embedding:
+  provider: sentence-transformers  # sentence-transformers | openai | ollama
+  model: all-MiniLM-L6-v2  # Default sentence-transformers model
+  # For OpenAI: use model like "text-embedding-3-small"
+  api_key: ${OPENAI_API_KEY}  # Optional, required for OpenAI provider
+  batch_size: 100
+
+# Document transformation
+transformer:
+  include_attendees: true
+  include_location: true
+  include_description: true
+  max_description_length: 2000
+
+# Indexing configuration
+indexing:
+  mode: incremental  # full | incremental
+  check_interval_seconds: 300  # How often to check for new events
+  reindex_on_startup: false
+
+# Logging
+log_level: INFO  # DEBUG | INFO | WARNING | ERROR
+
+# Health check port
+health_port: 8081
+

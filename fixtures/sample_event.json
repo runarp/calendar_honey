@@ -1,0 +1,87 @@
+{
+  "envelope": {
+    "source_channel": "calendar",
+    "source_instance": "personal",
+    "context_type": "calendar",
+    "context_id": "primary",
+    "context_label": "Primary Calendar",
+    "message_id": "calendar:primary:event123",
+    "remote_id": "event123",
+    "ts": "2025-11-20T08:00:00Z",
+    "direction": "inbound",
+    "sender": {
+      "id": "calendar:organizer@example.com",
+      "display_name": "Organizer Name",
+      "email": "organizer@example.com",
+      "role": "organizer"
+    },
+    "participants": [
+      {
+        "id": "calendar:organizer@example.com",
+        "display_name": "Organizer Name",
+        "email": "organizer@example.com"
+      },
+      {
+        "id": "calendar:attendee1@example.com",
+        "display_name": "Attendee 1",
+        "email": "attendee1@example.com",
+        "response_status": "accepted"
+      },
+      {
+        "id": "calendar:attendee2@example.com",
+        "display_name": "Attendee 2",
+        "email": "attendee2@example.com",
+        "response_status": "declined"
+      }
+    ],
+    "tags": ["calendar", "event"],
+    "attachments": []
+  },
+  "body": {
+    "text": "Team Meeting",
+    "description": "Weekly team sync to discuss project status and blockers. Please come prepared with updates.",
+    "location": "Conference Room A",
+    "start_time": "2025-11-20T08:00:00Z",
+    "end_time": "2025-11-20T09:00:00Z",
+    "all_day": false,
+    "status": "confirmed",
+    "recurring": false
+  },
+  "raw": {
+    "google_calendar": {
+      "id": "event123",
+      "summary": "Team Meeting",
+      "description": "Weekly team sync to discuss project status and blockers. Please come prepared with updates.",
+      "location": "Conference Room A",
+      "start": {
+        "dateTime": "2025-11-20T08:00:00Z"
+      },
+      "end": {
+        "dateTime": "2025-11-20T09:00:00Z"
+      },
+      "organizer": {
+        "email": "organizer@example.com",
+        "displayName": "Organizer Name"
+      },
+      "creator": {
+        "email": "creator@example.com",
+        "displayName": "Creator Name"
+      },
+      "attendees": [
+        {
+          "email": "attendee1@example.com",
+          "displayName": "Attendee 1",
+          "responseStatus": "accepted"
+        },
+        {
+          "email": "attendee2@example.com",
+          "displayName": "Attendee 2",
+          "responseStatus": "declined"
+        }
+      ],
+      "status": "confirmed",
+      "updated": "2025-11-20T07:00:00Z"
+    }
+  }
+}
+
