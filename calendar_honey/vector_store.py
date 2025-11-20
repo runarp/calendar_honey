@@ -29,7 +29,6 @@ class VectorStore:
         """Initialize ChromaDB vector store."""
         try:
             import chromadb
-            from chromadb.config import Settings
         except ImportError:
             raise ImportError("chromadb is required. Install with: pip install chromadb")
         
@@ -39,10 +38,20 @@ class VectorStore:
         
         logger.info(f"Initializing ChromaDB at {persist_directory}")
         
-        self.client = chromadb.PersistentClient(
-            path=persist_directory,
-            settings=Settings(anonymized_telemetry=False)
-        )
+        # Try to initialize without Settings first (for Python 3.14 compatibility)
+        try:
+            self.client = chromadb.PersistentClient(path=persist_directory)
+        except Exception:
+            # Fallback: try with Settings if available
+            try:
+                from chromadb.config import Settings
+                self.client = chromadb.PersistentClient(
+                    path=persist_directory,
+                    settings=Settings(anonymized_telemetry=False)
+                )
+            except Exception as e:
+                logger.error(f"Failed to initialize ChromaDB: {e}")
+                raise
         
         # Get or create collection
         self.collection = self.client.get_or_create_collection(

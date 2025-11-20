@@ -37,7 +37,7 @@ class Storage:
     
     def get_history_path(self, context_type: str, context_id: str, date_str: str) -> Path:
         """Get path to history file in Nest."""
-        return self.nest_path / "history" / "entities" / context_type / context_id / "events" / f"{date_str}.jsonl"
+        return self.nest_path / "history" / "entities" / context_type / context_id / "messages" / f"{date_str}.jsonl"
     
     def get_context_path(self, context_type: str, context_id: str) -> Path:
         """Get path to context.json in Nest."""
@@ -59,12 +59,12 @@ class Storage:
                 continue
             
             context_id = context_dir.name
-            events_dir = context_dir / "events"
+            messages_dir = context_dir / "messages"
             
-            if not events_dir.exists():
+            if not messages_dir.exists():
                 continue
             
-            for jsonl_file in events_dir.glob("*.jsonl"):
+            for jsonl_file in messages_dir.glob("*.jsonl"):
                 date_str = jsonl_file.stem
                 files.append((context_id, date_str, jsonl_file))
         

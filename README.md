@@ -24,10 +24,41 @@ The vector store output is optimized for consumption by RAG MCP servers, providi
 
 ## Installation
 
+**Important**: 
+- This project requires **Python 3.12 or 3.13** (Python 3.14 is not compatible with ChromaDB)
+- Always use a virtual environment for installation and testing
+- We recommend using `pyenv` to manage Python versions
+
+### Prerequisites
+
+**Using pyenv (Recommended):**
+
 ```bash
-# Clone the repository
+# Install pyenv if not already installed
+# macOS: brew install pyenv
+# Linux: See https://github.com/pyenv/pyenv#installation
+
+# Install Python 3.13 (or 3.12)
+pyenv install 3.13.9
+
+# Set local Python version for this project
+cd calendar_honey
+pyenv local 3.13.9
+```
+
+### Setup
+
+```bash
+# Clone the repository (if not already done)
 git clone https://github.com/runarp/calendar_honey.git
 cd calendar_honey
+
+# Verify Python version (should be 3.12 or 3.13)
+python --version
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -184,18 +215,45 @@ Document Loader → Document Transformer → Embedding Service → Vector Store
 
 ## Testing
 
-Run tests with pytest:
+**Important**: Always run tests within a virtual environment.
+
+### Setup
 
 ```bash
-# Run all tests
+# Create and activate virtual environment (if not already done)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies (including test dependencies)
+pip install -r requirements.txt
+```
+
+### Running Tests
+
+```bash
+# Make sure venv is activated
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run all tests (requires chromadb and pydantic-settings)
 pytest
 
-# Run only fast tests (skip integration tests)
+# Run only fast tests (skip integration tests that require chromadb)
 pytest -m "not slow"
+
+# Run with verbose output
+pytest -v
 
 # Run with coverage
 pytest --cov=calendar_honey --cov-report=html
+
+# Run specific test file
+pytest tests/test_document_transformer.py -v
+
+# Or use the test runner script (automatically handles venv)
+./run_tests.sh -m "not slow"
 ```
+
+**Note**: Integration tests (marked with `@pytest.mark.slow`) require `chromadb` and `pydantic-settings` to be properly installed. These tests may fail if there are dependency conflicts. The core functionality tests (document loader, transformer) run successfully without chromadb.
 
 ### Test Fixtures
 
@@ -241,7 +299,8 @@ calendar_honey/
 
 ## Requirements
 
-- Python >= 3.12
+- **Python 3.12 or 3.13** (Python 3.14 is not compatible with ChromaDB)
+- pyenv (recommended for Python version management)
 - chromadb >= 0.4.0
 - sentence-transformers >= 2.2.0 (default) or openai >= 1.0.0 (optional)
 

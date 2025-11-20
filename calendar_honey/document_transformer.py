@@ -1,7 +1,7 @@
 """Transform calendar events into RAG documents."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from .config import Config
 
@@ -127,7 +127,7 @@ class DocumentTransformer:
                     metadata["attendees"] = attendee_emails
         
         # Add timestamp for indexing tracking
-        metadata["indexed_at"] = datetime.utcnow().isoformat() + "Z"
+        metadata["indexed_at"] = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
         
         # Parse timestamp from envelope for date-based filtering
         ts_str = envelope.get("ts", "")

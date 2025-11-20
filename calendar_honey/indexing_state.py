@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, Optional
 from .storage import Storage
@@ -36,16 +36,17 @@ class IndexingState:
                 self.state = json.load(f)
         except Exception as e:
             logger.warning(f"Failed to load indexing state: {e}. Starting fresh.")
+            now = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
             self.state = {
                 "version": "1.0.0",
-                "created_at": datetime.utcnow().isoformat() + "Z",
-                "updated_at": datetime.utcnow().isoformat() + "Z",
+                "created_at": now,
+                "updated_at": now,
                 "calendars": {},
             }
     
     def _save_state(self) -> None:
         """Save state to file."""
-        self.state["updated_at"] = datetime.utcnow().isoformat() + "Z"
+        self.state["updated_at"] = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
         
         self.storage.ensure_directories()
         
@@ -66,12 +67,13 @@ class IndexingState:
             self.state["calendars"] = {}
         
         if calendar_id not in self.state["calendars"]:
+            now = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
             self.state["calendars"][calendar_id] = {
-                "first_indexed_at": datetime.utcnow().isoformat() + "Z",
+                "first_indexed_at": now,
             }
         
         self.state["calendars"][calendar_id]["last_indexed_date"] = date
-        self.state["calendars"][calendar_id]["last_indexed_at"] = datetime.utcnow().isoformat() + "Z"
+        self.state["calendars"][calendar_id]["last_indexed_at"] = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
         self._save_state()
     
     def get_indexed_files(self, calendar_id: str) -> Dict[str, Any]:
@@ -85,8 +87,9 @@ class IndexingState:
             self.state["calendars"] = {}
         
         if calendar_id not in self.state["calendars"]:
+            now = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
             self.state["calendars"][calendar_id] = {
-                "first_indexed_at": datetime.utcnow().isoformat() + "Z",
+                "first_indexed_at": now,
             }
         
         if "indexed_files" not in self.state["calendars"][calendar_id]:
@@ -94,7 +97,7 @@ class IndexingState:
         
         self.state["calendars"][calendar_id]["indexed_files"][file_path] = {
             "event_count": event_count,
-            "indexed_at": datetime.utcnow().isoformat() + "Z",
+            "indexed_at": datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
         }
         self._save_state()
     
